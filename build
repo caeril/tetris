@@ -1,0 +1,4 @@
+#!/bin/sh
+# Unity Build because Makefiles suck
+clang++ -o tetris tetris.cpp main.cpp -Wall -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+
