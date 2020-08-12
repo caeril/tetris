@@ -10,13 +10,17 @@ struct Pos {
     int Y;
 };
 
-struct Tetrino {
-    Pos Blocks[4];
+static int tetrinoCount = 7;
+
+
+struct Sprite {
+    int Blocks[16];
 };
 
 
-static int tetrinoCount = 4;
 
-Tetrino* InitTetrinos( );
+Sprite* InitSprites( );
+void RotateSprite( Sprite* sprites, int index );
+
 
 #endif //TETRIS_H

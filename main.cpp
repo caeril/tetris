@@ -25,19 +25,18 @@ int main(void) {
     const int borderWidth = 8;
     
     
-    
-    
     PlayField field;
     field.Width = 10;
     field.Height = 20;
     field.Boxes = new unsigned int[field.Width*field.Height];
     
     
-    Tetrino* Tetrinos = InitTetrinos();
+    Sprite* sprites = InitSprites();
+    
     
     InitWindow(screenWidth, screenHeight, "caeril's tetris clone");
     
-    SetTargetFPS(60);
+    SetTargetFPS(30);
     
     
     int tetrinoIndex = rando()%tetrinoCount;
@@ -52,6 +51,18 @@ int main(void) {
     
     while (!WindowShouldClose()) {
         
+        
+        // check input first
+        if (IsKeyDown(KEY_RIGHT)) tetrinoX += 1;
+        if (IsKeyDown(KEY_LEFT)) tetrinoX -= 1;
+        
+        if (IsKeyDown(KEY_UP)) {
+            RotateSprite( sprites, tetrinoIndex );
+        }
+        
+        if (IsKeyDown(KEY_DOWN)) tetrinoY +=1;
+        
+        
         frames++;
         if( frames % framesPerDrop == 0 ) {
             tetrinoY++;
@@ -60,6 +71,15 @@ int main(void) {
         if( tetrinoY > 19 ) {
             tetrinoY = 0;
             tetrinoIndex = rando()%tetrinoCount;
+            
+        }
+        
+        if( tetrinoX < 0 ) {
+            tetrinoX = 0;
+        }
+        
+        if( tetrinoX >= field.Width ) {
+            tetrinoX = field.Width-1;
         }
         
         
@@ -84,14 +104,16 @@ int main(void) {
         
         // select a tetrino
         
-        Tetrino tetrino = Tetrinos[tetrinoIndex];
+        Sprite sprite = sprites[tetrinoIndex];
         
-        for( int i=0; i<4; i++ ) {
-            
-            int x = tetrinoX + tetrino.Blocks[i].X;
-            int y = tetrinoY + tetrino.Blocks[i].Y;
-            
-            field.Boxes[y*field.Width+x] = 1;
+        for( int x=0; x<4; x++ ) {
+            for( int y=0; y<4; y++ ) {
+                if( sprite.Blocks[y*4+x] != 0 ) {
+                    int mx = tetrinoX + x;
+                    int my = tetrinoY + y;
+                    field.Boxes[my*field.Width+mx] = 1;
+                }
+            }
         }
         
         DrawRectangleLinesEx( border, borderWidth, GREEN );
